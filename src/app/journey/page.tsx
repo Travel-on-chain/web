@@ -3,6 +3,7 @@ import React, { useEffect, useRef } from 'react';
 import GameCanvas from '../game/game';
 import tempale1 from '@/../public/tempale1.png';
 import tempale2 from '@/../public/tempale2.png';
+import user from '@/../public/man.png'
 //向右x+50y+14;
 //向左x - 48 y-22;
 type Point = { x: number; y: number };
@@ -99,7 +100,7 @@ export default function Game() {
 			height: 750,
 			routes: routes,
 			passRoutes: [],
-			manPic: tempale1.src
+			manPic: user.src
 		});
 		let bg = new GameCanvas({
 			id: 'canvas',

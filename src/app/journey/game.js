@@ -11,7 +11,7 @@ export default class GameCanvas {
 		this.initCanvas();
 		this.manPic = options.manPic;
 		this.img = new Image();
-		this.curIndex = null;
+		this.curIndex = 0;
 	}
 	initCanvas() {
 		let canvas = document.getElementById(this.options.id);
@@ -130,8 +130,9 @@ export default class GameCanvas {
 	animate(index) {
 		let speed = 1;
 		const startPoint =
-			this.routes[index !== undefined ? index - 1 : this.curIndex - 1];
-		const endPoint = this.routes[index !== undefined ? index : this.curIndex];
+			this.routes[this.curIndex].center;
+		const endPoint = this.routes[this.curIndex+1].center;
+		this.curIndex = index+this.curIndex
 		// if (index) {
 		// this.curIndex = index;
 		// }
@@ -155,8 +156,9 @@ export default class GameCanvas {
 				x = Math.round(xStep + x);
 				y = Math.round(yStep + y);
 				this.ctx.clearRect(0, 0, this.options.width, this.options.height); // clear canvas
-				this.ctx.drawImage(this.img, x, y, 179 / 2, 160 / 2); // draw image at current position
-				if (Math.abs(x - endPoint.x) !== 0 && Math.abs(y - endPoint.y) !== 0)
+				this.ctx.drawImage(this.img, x, y, 40,40); // draw image at current position
+				console.log('===',x,endPoint.x,y,endPoint.y)
+				if (Math.abs(x - endPoint.x) > xStep && Math.abs(y - endPoint.y) > yStep)
 					requestAnimationFrame(() => draw(index)); // loop
 			};
 			this.img.src = this.manPic;
@@ -168,7 +170,7 @@ export default class GameCanvas {
 		// this.img.src = this.manPic;
 
 		// window.requestAnimationFrame(() => {
-		// 	if (Math.abs(x - endPoint.x) !== 0 && Math.abs(y - endPoint.y) !== 0) {
+		// 	if (Math.abs(x - endPoint.x) !== 0 || Math.abs(y - endPoint.y) !== 0) {
 		// 		draw();
 		// 	}
 		// });
@@ -182,24 +184,6 @@ export default class GameCanvas {
 		// this.points.push(end);
 		// this.startAnimate(resolve, reject);
 	}
-	x = 0;
-	y = 0;
-	animate2(index) {
-		// this.img.src = this.manPic
-		const startPoint =
-			this.routes[index !== undefined ? index - 1 : this.curIndex - 1];
-		x = this.x;
-		const endPoint = this.routes[index !== undefined ? index : this.curIndex];
-		console.log(this.x, startPoint.y, 'draw');
-		this.img.onload = () => {
-			this.ctx.clearRect(0, 0, this.options.width, this.options.height); // clear canvas
-			this.ctx.drawImage(this.img, this.x, startPoint.y, 179 / 2, 160 / 2); // draw image at current position
-			this.x -= 4;
-			if (this.x > 0) requestAnimationFrame(() => this.animate(index)); // loop
-		};
-		this.img.src = this.manPic;
-	}
-
 	startAnimate(resolve, reject) {
 		let nowPoint = this.points[this.animateNum];
 		this.animateNum++;
