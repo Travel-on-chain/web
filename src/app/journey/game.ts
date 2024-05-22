@@ -1,26 +1,38 @@
 export default class GameCanvas {
+	curIndex = 0;
+	routes: any[] = [];
+	ctx: any;
+	img: any;
+	passRoutes: any[] = [];
+	options: any;
+	manPic: string;
+
 	constructor(options) {
 		this.options = options;
 		this.ctx = null;
 		this.timer = null;
 		this.points = [];
 		this.animateNum = 0;
+		// window.devicePixelRatio ||
 		this.dpr = window.devicePixelRatio || 1;
 		this.routes = options.routes;
 		this.passRoutes = options.passRoutes;
 		this.initCanvas();
 		this.manPic = options.manPic;
 		this.img = new Image();
-		this.curIndex = 0;
+		this.curIndex = options.currentIndex ?? 0;
 	}
+
 	initCanvas() {
 		let canvas = document.getElementById(this.options.id);
+		// console.log(this.dpr, 'this.dpr');
 		canvas.width = this.options.width * this.dpr;
 		canvas.height = this.options.height * this.dpr;
 		this.ctx = canvas.getContext('2d');
 		this.ctx.scale(this.dpr, this.dpr);
 		// this.drawInitialPath();
 	}
+
 	/**
 	 * @Author: yuyongxing
 	 * @param {*}
@@ -59,6 +71,7 @@ export default class GameCanvas {
 			this.drawPoint(point.x, point.y, '#bbb');
 		}
 	}
+
 	/**
 	 * @Author: yuyongxing
 	 * @param {*} routes
@@ -75,6 +88,7 @@ export default class GameCanvas {
 			return item;
 		});
 	}
+
 	/**
 	 * @Author: yuyongxing
 	 * @param {*} x
@@ -96,6 +110,7 @@ export default class GameCanvas {
 		this.ctx.fill();
 		this.ctx.closePath();
 	}
+
 	/**
 	 * @Author: yuyongxing
 	 * @param {*} start
@@ -107,7 +122,7 @@ export default class GameCanvas {
 	 * @LastEditTime: Do not edit
 	 * @Description: 绘制线段
 	 */
-	drawLine(start, end, color) {
+	drawLine(start: any, end: any, color: string) {
 		this.ctx.strokeStyle = color;
 		this.ctx.shadowColor = color;
 		this.ctx.shadowBlur = 0.5;
@@ -117,6 +132,7 @@ export default class GameCanvas {
 		this.ctx.stroke();
 		this.ctx.closePath();
 	}
+
 	/**
 	 * @Author: yuyongxing
 	 * @param {*} start
@@ -127,87 +143,46 @@ export default class GameCanvas {
 	 * @LastEditTime: Do not edit
 	 * @Description: 开始两个坐标点之间的动画
 	 */
-	animate(index) {
-		let speed = 1;
-		const startPoint =
-			this.routes[this.curIndex].center;
-		const endPoint = this.routes[this.curIndex+1].center;
-		this.curIndex = index+this.curIndex
-		// if (index) {
-		// this.curIndex = index;
-		// }
-		// let rate =
-		// 	Math.sqrt(Math.pow(end.x - startPoint.x, 2) + Math.pow(end.y - startPoint.y, 2)) /
-		// 	speed;
+	animate(index: number): Promise<void> {
+		console.log(index);
+		return new Promise(async (resolve) => {
+			this.curIndex =
+				index + this.curIndex == this.routes.length ? 0 : index + this.curIndex;
+			console.log(this.curIndex, 'this.curIndex');
+			window.localStorage.setItem('currentPosition', this.curIndex);
 
-		let xStep = (endPoint.x - startPoint.x) / 20;
-		let yStep = (endPoint.y - startPoint.y) / 20;
-		let x = startPoint.x;
-		let y = startPoint.y;
-		console.log(startPoint, endPoint, 'draw', x, y);
-		// this.img.onload = () => {
-		const draw = (index) => {
-			// window.requestAnimationFrame(() => {
-			// 	if (Math.abs(x - endPoint.x) !== 0 && Math.abs(y - endPoint.y) !== 0) {
-			// 		draw();
-			// 	}
-			// });
-			this.img.onload = () => {
-				x = Math.round(xStep + x);
-				y = Math.round(yStep + y);
-				this.ctx.clearRect(0, 0, this.options.width, this.options.height); // clear canvas
-				this.ctx.drawImage(this.img, x, y, 40,40); // draw image at current position
-				console.log('===',x,endPoint.x,y,endPoint.y)
-				if (Math.abs(x - endPoint.x) > xStep && Math.abs(y - endPoint.y) > yStep)
-					requestAnimationFrame(() => draw(index)); // loop
+			const startPoint =
+				this.routes[
+					this.curIndex === 0 ? this.routes.length - 1 : this.curIndex - 1
+					].center;
+			const endPoint = this.routes[this.curIndex].center;
+
+			let xStep = (endPoint.x - startPoint.x) / 20;
+			let yStep = (endPoint.y - startPoint.y) / 20;
+			let x = startPoint.x;
+			let y = startPoint.y;
+
+			const draw = (index: number) => {
+				return new Promise((resolve) => {
+					this.img.onload = () => {
+						let xleft = Math.abs(x - endPoint.x) < 1;
+						let yleft = Math.abs(y - endPoint.y) < 1;
+						x = xleft ? x : xStep + x;
+						y = yleft ? y : yStep + y;
+						this.ctx.clearRect(0, 0, this.options.width, this.options.height); // clear canvas
+						this.ctx.drawImage(this.img, x, y, 30, 30); // draw image at current position
+						if (!xleft && !yleft) {
+							requestAnimationFrame(() => resolve(draw(index))); // loop
+						} else {
+							resolve('done');
+						}
+					};
+					this.img.src = this.manPic;
+				});
 			};
-			this.img.src = this.manPic;
-		};
-		draw(index);
-		// };
-		// console.log(manPic, 'manPic');
 
-		// this.img.src = this.manPic;
-
-		// window.requestAnimationFrame(() => {
-		// 	if (Math.abs(x - endPoint.x) !== 0 || Math.abs(y - endPoint.y) !== 0) {
-		// 		draw();
-		// 	}
-		// });
-
-		// for (let i = 0; i < rate; i++) {
-		// 	this.points.push({
-		// 		x: (start.x + ((end.x - start.x) / rate) * i - 20).toFixed(1),
-		// 		y: (start.y + ((end.y - start.y) / rate) * i + 3).toFixed(1)
-		// 	});
-		// }
-		// this.points.push(end);
-		// this.startAnimate(resolve, reject);
-	}
-	startAnimate(resolve, reject) {
-		let nowPoint = this.points[this.animateNum];
-		this.animateNum++;
-		let nextPoint = this.points[this.animateNum];
-		this.ctx.beginPath();
-		// this.ctx.strokeStyle = '#1DEFFF';
-		// this.ctx.shadowColor = '#1DEFFF';
-		// this.ctx.lineWidth = 7;
-		// this.ctx.moveTo(nowPoint.x, nowPoint.y);
-		// this.ctx.lineTo(nextPoint.x, nextPoint.y);
-		this.ctx.arc(nowPoint.x, nowPoint.y, 3, 0, Math.PI * 2, true);
-		this.ctx.stroke();
-		this.ctx.closePath();
-
-		this.timer = window.requestAnimationFrame(() => {
-			// this.startAnimate(resolve, reject);
+			await draw(index);
+			setTimeout(() => resolve(), 250);
 		});
-
-		// if (this.animateNum >= this.points.length - 1) {
-		// 	this.points = [];
-		// 	this.animateNum = 0;
-		// 	window.cancelAnimationFrame(this.timer);
-		// 	this.drawPoint(nowPoint.x, nowPoint.y, '#1DEFFF');
-		// 	resolve();
-		// }
 	}
 }
