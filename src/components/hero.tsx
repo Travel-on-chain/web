@@ -5,7 +5,7 @@ import { Button } from '@/components/ui/button';
 import ReactECharts from 'echarts-for-react';
 import { useEffect, useRef } from 'react';
 import ChinaMap from '@/components/map';
-import NightEarth from '@/components/night-earth/night-earth';
+// import NightEarth from '@/components/night-earth/night-earth';
 // import '../../public/cesium/Widgets/widgets.css';
 
 export const Hreo = () => {
@@ -17,11 +17,11 @@ export const Hreo = () => {
 	return (
 		<div className="space-y-5 pt-36 text-center font-bold text-white">
 			<div className="space-y-5 text-4xl font-extrabold sm:text-5xl md:text-6xl lg:text-7xl">
-				<h1>Travel in China</h1>
+				<h1>Travel on Chain</h1>
 				<div className="bg-gradient-to-r from-purple-400 to-pink-600 bg-clip-text text-transparent">
 					<TypewriterComponent
 						options={{
-							strings: ['Composable!', 'Explore more.', 'Enjoy more.'],
+							strings: ['Enjoy travel!', 'Explore more.', 'Enjoy more.'],
 							autoStart: true,
 							loop: true
 						}}
@@ -32,13 +32,13 @@ export const Hreo = () => {
 				Create your own Composable NFTs.
 			</div>
 			<div>
-				<Button
-					variant="premium"
-					className="rounded-full p-4 font-semibold md:p-6 md:text-lg"
-					onClick={() => getNTF()}
-				>
-					Lottery
-				</Button>
+				{/*<Button*/}
+				{/*	variant="premium"*/}
+				{/*	className="rounded-full p-4 font-semibold md:p-6 md:text-lg pointer-events-auto"*/}
+				{/*	onClick={() => getNTF()}*/}
+				{/*>*/}
+				{/*	Lottery*/}
+				{/*</Button>*/}
 
 				{/* <ChinaMap
 					ref={mapRef}

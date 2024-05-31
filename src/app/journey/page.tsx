@@ -5,22 +5,19 @@ import React, { useEffect, useRef, useState } from 'react';
 import GameCanvas from '@/app/journey/game';
 import tempale1 from '@/../public/tempale1.png';
 import tempale2 from '@/../public/tempale2.png';
-// import single4 from '@/../public/single4.png';
-// import single5 from '@/../public/single5.png';
-// import single6 from '@/../public/single6.png';
-// import d from '@/../public/d.png';
+
 import panda from '@/../public/panda.png';
 import user from '@/../public/man.png';
 import { centers } from './constant';
-import tempale3 from '@/../public/tample3.png';
-
-import { cn } from '@/lib/utils';
-import '@/components/rollDice/styles.scss';
 import { RollDice } from '@/components/rollDice/rollDice';
-
 import Modal from '@/components/modal';
 import { useModalStore } from '@/store/useModalStore';
-// import Image from 'next/image';
+import FireworksCanvas from './fireworks';
+import RankingList from '@/components/side-widgets/ranking-list';
+import CardCollection from '@/components/side-widgets/card-collection';
+import FinishedModal from '@/components/finished-modal';
+import '@/components/rollDice/styles.scss';
+import { FinalMint } from '@/components/mint-ui/final-mint';
 
 //向右x+50y+14;
 //向左x - 48 y-22;
@@ -31,32 +28,33 @@ const imgs = [tempale1, tempale2, panda];
 function right(point: Point) {
 	return {
 		x: point.x + 53,
-		y: point.y + 12.8
+		y: point.y + 12
 	};
 }
 
 function left(point: Point) {
 	return {
-		x: point.x - 47.8,
-		y: point.y + 21.8
+		x: point.x - 48,
+		y: point.y + 22
 	};
 }
 
 function up(point: Point) {
 	return {
-		x: point.x + 47.5,
-		y: point.y - 21.8
+		x: point.x + 48,
+		y: point.y - 22
 	};
 }
 
 function upLeft(point: Point) {
 	return {
-		x: point.x - 53.3,
-		y: point.y - 12.6
+		x: point.x - 53,
+		y: point.y - 12
 	};
 }
 export default function Game() {
 	const [canvasWidth, setCanvasWidth] = useState(0);
+	const [finishedModalShow, setFinishedModalShow] = useState(false);
 	const canvasRef = useRef(null);
 	const animateCanvasRef = useRef(null);
 	const gameRef = useRef(null);
@@ -68,9 +66,10 @@ export default function Game() {
 	// });
 	// const gridcanvasRef = useRef(null);
 	// const cordinateCanvasRef = useRef(null);
-	const start = localStorage.getItem('currentPosition')
-		? parseInt(localStorage.getItem('currentPosition') as string, 10)
-		: 0;
+	const start = 48;
+	// localStorage.getItem('currentPosition')
+	// 	? parseInt(localStorage.getItem('currentPosition') as string, 10)
+	// 	: 0;
 	// if (typeof window !== 'undefined') {
 	// 	start =
 	// 		window.localStorage.getItem('lastIndex') !== null &&
@@ -90,24 +89,28 @@ export default function Game() {
 			switch (step.dir) {
 				case 'right':
 					for (let i = 0; i < step.times; i++) {
+						// @ts-ignore
 						routes.push(right(routes[times]));
 						times++;
 					}
 					break;
 				case 'left':
 					for (let i = 0; i < step.times; i++) {
+						// @ts-ignore
 						routes.push(left(routes[times]));
 						times++;
 					}
 					break;
 				case 'up':
 					for (let i = 0; i < step.times; i++) {
+						// @ts-ignore
 						routes.push(up(routes[times]));
 						times++;
 					}
 					break;
 				case 'upLeft':
 					for (let i = 0; i < step.times; i++) {
+						// @ts-ignore
 						routes.push(upLeft(routes[times]));
 						times++;
 					}
@@ -121,6 +124,7 @@ export default function Game() {
 	}
 
 	function drawBoard(routes: Routes) {
+		// @ts-ignore
 		const context = canvasRef.current?.getContext('2d');
 
 		// 获取走过的点位的缓存
@@ -143,10 +147,25 @@ export default function Game() {
 			context.restore(); // 恢复原有的绘图状态
 		});
 	}
+	const fireworksRef = useRef();
+
+	const handleStart = () => {
+		if (fireworksRef.current) {
+			// @ts-ignore
+			fireworksRef.current.startFireworks();
+		}
+	};
+
+	const handleStop = () => {
+		// if (fireworksRef.current) {
+		// @ts-ignore
+		fireworksRef.current.stopFireworks();
+		// }
+	};
 
 	useEffect(() => {
 		const routes = generateRoutes(
-			{ x: 220, y: 128, center: { x: 180, y: 105 } },
+			{ x: 215, y: 126, center: { x: 180, y: 105 } },
 			[
 				{ dir: 'right', times: 3 },
 				{ dir: 'left', times: 5 },
@@ -182,6 +201,7 @@ export default function Game() {
 			passRoutes: []
 		});
 
+		// @ts-ignore
 		gameRef.current = game;
 		// console.log(canvasRef.current, 'canvasRef.current');
 
@@ -209,6 +229,7 @@ export default function Game() {
 			imgs.forEach((img, inx) => {
 				const imgSingle = new Image();
 				imgSingle.onload = function () {
+					// @ts-ignore
 					const context = canvasRef.current.getContext('2d');
 
 					if (inx === 3) {
@@ -242,6 +263,7 @@ export default function Game() {
 		if (animateCanvasRef?.current) {
 			const userIcon = new Image();
 			userIcon.onload = function () {
+				// @ts-ignore
 				const animaContext = animateCanvasRef?.current?.getContext('2d');
 				// console.log(animaContext, 'animate', animateCanvasRef);
 				animaContext?.drawImage(
@@ -265,6 +287,7 @@ export default function Game() {
 
 		return () => {
 			if (canvasRef.current) {
+				// @ts-ignore
 				animateCanvasRef.current?.removeEventListener('click', go);
 			}
 			window.removeEventListener('resize', handleResize);
@@ -273,10 +296,13 @@ export default function Game() {
 
 	async function go(moves: number) {
 		if (gameRef.current) {
+			// @ts-ignore
 			await gameRef.current.animate(moves);
 		}
 		setTimeout(() => {
 			setIsShow(true);
+			setFinishedModalShow(true);
+			// handleStart();
 		}, 2000);
 	}
 
@@ -302,14 +328,22 @@ export default function Game() {
 
 	return (
 		// bg-[#111827]
-		<div className="h-full overflow-auto  bg-[#81b1bb]">
+		<div className=" overflow-auto bg-[#e6c8af]">
 			<Modal show={isShow} onClose={() => setIsShow(false)} />
+			{/* <Modal show={true} onClose={() => setIsShow(false)} /> */}
 
+			<FinishedModal
+				show={finishedModalShow}
+				onClose={() => {
+					setFinishedModalShow(false);
+					handleStop();
+				}}
+			/>
 			<div className="box flex">
 				<div
 					id="chess-board"
 					className="relative flex-shrink flex-grow-0 overflow-auto"
-					style={{ flexBasis: '70%' }}
+					style={{ flexBasis: '70%', maxHeight: 895, overflow: 'hidden' }}
 				>
 					<canvas
 						style={{
@@ -321,7 +355,6 @@ export default function Game() {
 						id="canvas"
 						ref={canvasRef}
 					></canvas>
-					<div></div>
 					<canvas
 						id="anicanvas"
 						ref={animateCanvasRef}
@@ -335,21 +368,56 @@ export default function Game() {
 							width: canvasWidth
 						}}
 					></canvas>
+					<FireworksCanvas ref={fireworksRef} />
 					<img
-						src="/assets/chessbg.png"
+						src="/assets/chessbg.jpg"
+						// src="/assets/bg-journey.jpg"
 						alt="background-img for chess board"
 						className="absolute left-0 top-0  z-[2] w-full object-cover opacity-100"
 						style={{
-							marginTop: 10,
-							width: canvasWidth - 50,
-							height: 728
+							// marginTop: -60,
+							// marginLeft: 0,
+							width: canvasWidth - 5,
+							height: 896
+							// width: canvasWidth - 50
+							// height: 728
 						}}
 					/>
 				</div>
+				{/* {!isShow && <RollDice onDiceChange={go} />} */}
 				<RollDice onDiceChange={go} />
-				<div className="flex grow justify-center">
-					<div className=" size-12 w-max  text-white" style={{ fontSize: 24 }}>
-						MY NFTS
+				<CardCollection />
+				<div
+					className="relative flex grow flex-col items-center justify-start overflow-auto"
+					// style={{ backgroundImage: "url('/assets/bg-rankings.png')" }}
+				>
+					<div
+						style={{
+							width: finishedModalShow ? window.innerWidth : 0,
+							height: window.innerHeight,
+							background: 'rgba(0,0,0,0.5)',
+							position: 'absolute',
+							top: 0,
+							left: 0,
+							zIndex: 7
+						}}
+					></div>
+
+					<div className="flex grow flex-col items-center justify-start">
+						<div
+							className="relative z-[3] size-12 w-max  pt-2 font-semibold"
+							style={{ fontSize: 24, color: 'rgb(24 24 24)' }}
+							onClick={() => handleStart()}
+						>
+							Ranking List
+						</div>
+						<RankingList className="relative z-[3]" />
+						<img
+							src="/assets/bg-rankings.png"
+							alt=""
+							className=" absolute -left-4 -top-16 z-[2] w-full object-cover"
+							style={{ height: 973, filter: 'blur(10px)' }}
+						/>
 					</div>
 				</div>
 			</div>

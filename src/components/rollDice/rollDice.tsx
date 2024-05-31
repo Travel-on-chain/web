@@ -206,7 +206,9 @@ export const RollDice = ({ onDiceChange }: { onDiceChange: Function }) => {
 				dice.style.transform = `translateY(0px) rotateX(-30deg) rotateY(${rotateY}deg) rotateZ(${rotateZ}deg)`;
 
 				// dice.style.transition = 'none';
-				dice.style.animation = 'spin 25s infinite linear';
+				setTimeout(() => {
+					dice.style.animation = 'dice-spin 25s infinite linear';
+				}, 2500);
 			}, 1500);
 
 			// chess move by dice steps
@@ -241,8 +243,10 @@ export const RollDice = ({ onDiceChange }: { onDiceChange: Function }) => {
 				// 	}
 				// }}
 				onClick={handleDiceclick}
-				style={{ zIndex: 6 }}
-				className={cn('dice-button !z-6 absolute left-[30%] top-[40%] ')}
+				style={{ zIndex: 9 }}
+				className={cn(
+					'dice-button !z-6 !pointer-events-auto absolute left-[30%] top-[40%] '
+				)}
 			>
 				<div id="scene">
 					<div id="cover">
