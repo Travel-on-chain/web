@@ -56,23 +56,23 @@ export const Navbar = ({ className }: { className: String }) => {
 				))}
 			</div>
 			<div className="flex items-center gap-x-2">
-				<Link href={'/'}>
-					{/* <Button
+				{/* <Link href={'/'}> */}
+				{/* <Button
 						variant="outline"
 						className="rounded-full"
 						onClick={() => connect({ connector: injected() })}
 					>
 						Wallet
 					</Button> */}
-					<ConnectButton
-						accountStatus={{
-							smallScreen: 'avatar',
-							largeScreen: 'full'
-						}}
-					>
-						Connect Wallet
-					</ConnectButton>
-				</Link>
+				<ConnectButton
+					accountStatus={{
+						smallScreen: 'avatar',
+						largeScreen: 'full'
+					}}
+				>
+					Connect Wallet
+				</ConnectButton>
+				{/* </Link> */}
 			</div>
 		</nav>
 	);

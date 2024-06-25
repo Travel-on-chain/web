@@ -1,7 +1,13 @@
 import { getDefaultConfig, Chain } from '@rainbow-me/rainbowkit';
 import { http, createConfig } from '@wagmi/core';
 
-import { mainnet, sepolia, arbitrumSepolia } from 'wagmi/chains';
+import {
+	mainnet,
+	sepolia,
+	arbitrumSepolia,
+	lineaSepolia,
+	linea
+} from 'wagmi/chains';
 
 const Morph = {
 	id: 2710,
@@ -21,13 +27,15 @@ const Morph = {
 export const config = getDefaultConfig({
 	appName: 'My RainbowKit App',
 	projectId: 'YOUR_PROJECT_ID',
-	chains: [mainnet, sepolia, arbitrumSepolia, Morph]
+	chains: [mainnet, lineaSepolia, linea, sepolia, arbitrumSepolia, Morph]
 });
 
 export const wagmiCoreConfig = createConfig({
-	chains: [mainnet, sepolia, arbitrumSepolia, Morph],
+	chains: [mainnet, lineaSepolia, linea, sepolia, arbitrumSepolia, Morph],
 	transports: {
 		[mainnet.id]: http(),
+		[lineaSepolia.id]: http(),
+		[linea.id]: http(),
 		[sepolia.id]: http(),
 		[arbitrumSepolia.id]: http(),
 		[Morph.id]: http()

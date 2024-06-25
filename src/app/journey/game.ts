@@ -172,7 +172,7 @@ export default class GameCanvas {
 						x = xleft ? x : xStep + x;
 						y = yleft ? y : yStep + y;
 						this.ctx.clearRect(0, 0, this.options.width, this.options.height); // clear canvas
-						this.ctx.drawImage(this.img, x, y, 30, 30); // draw image at current position
+						this.ctx.drawImage(this.img, x, y, 40, 40); // draw image at current position
 						if (!xleft && !yleft) {
 							requestAnimationFrame(() => resolve(draw(index))); // loop
 						} else {

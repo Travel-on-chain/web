@@ -7,7 +7,7 @@ import tempale1 from '@/../public/tempale1.png';
 import tempale2 from '@/../public/tempale2.png';
 
 import panda from '@/../public/panda.png';
-import user from '@/../public/man.png';
+import user from '@/../public/forg.png';
 import { centers } from './constant';
 import { RollDice } from '@/components/rollDice/rollDice';
 import Modal from '@/components/modal';
@@ -100,24 +100,27 @@ export default function Game() {
 		const context = canvasRef.current?.getContext('2d');
 
 		// 获取走过的点位的缓存
-		const mintedPoint = localStorage.getItem('mintedPoint')
-			? JSON.parse(localStorage.getItem('mintedPoint') as string)
-			: [];
-		routes.forEach((route, index) => {
-			if (mintedPoint.includes(index)) {
-				console.log('需要绘制成mint过的样式');
-				context.fillStyle = 'rgb(248,63,63)'; // 设置方块的颜色
-			} else {
-				context.fillStyle = 'rgba(250,229,208,0.8)'; // 设置方块的颜色
-			}
-			context.save(); // 保存当前的绘图状态
-			context.translate(route.x, route.y); // 将坐标原点移动到方块的位置
-			context.rotate(-Math.PI * 0.19); // 旋转45度
-			context.transform(1, 0.2, 0.9, 1, 0, 0);
-			context.scale(1, 0.8); // 缩放y轴，使得形状变为菱形
-			context.fillRect(-35, -35, 48, 48); // 绘制方块
-			context.restore(); // 恢复原有的绘图状态
-		});
+		if (window !== undefined) {
+			const mintedPoint = localStorage.getItem('mintedPoint')
+				? JSON.parse(localStorage.getItem('mintedPoint') as string)
+				: [];
+
+			routes.forEach((route, index) => {
+				if (mintedPoint.includes(index)) {
+					console.log('需要绘制成mint过的样式');
+					context.fillStyle = 'rgb(248,63,63)'; // 设置方块的颜色
+				} else {
+					context.fillStyle = 'rgba(250,229,208,0.8)'; // 设置方块的颜色
+				}
+				context.save(); // 保存当前的绘图状态
+				context.translate(route.x, route.y); // 将坐标原点移动到方块的位置
+				context.rotate(-Math.PI * 0.19); // 旋转45度
+				context.transform(1, 0.2, 0.9, 1, 0, 0);
+				context.scale(1, 0.8); // 缩放y轴，使得形状变为菱形
+				context.fillRect(-35, -35, 48, 48); // 绘制方块
+				context.restore(); // 恢复原有的绘图状态
+			});
+		}
 	}
 	const fireworksRef = useRef();
 
@@ -243,8 +246,8 @@ export default function Game() {
 						userIcon,
 						centers[start].x,
 						centers[start].y,
-						30,
-						30
+						40,
+						40
 					);
 				};
 				userIcon.src = user.src;
