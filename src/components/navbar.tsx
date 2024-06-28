@@ -33,13 +33,13 @@ export const Navbar = ({ className }: { className: String }) => {
 						width={64}
 						height={64}
 						alt="Logo"
-						src="/logo1.jpg"
+						src="/webLogo.png"
 						priority
 						sizes=""
 					/>
 				</div>
 				<h1 className={cn('text-2xl font-bold text-white', font.className)}>
-					Palamedes
+					Travel on Chain
 				</h1>
 			</Link>
 			<div className="hidden lg:flex lg:gap-x-12">

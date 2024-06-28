@@ -29,11 +29,11 @@ export default function NightEarth({ className }: { className: String }) {
 				terrain: Cesium.Terrain.fromWorldTerrain()
 			});
 
-			// 隐藏toolbar
-			viewer.animation._container.style.display = 'none'; //隐藏掉时钟 图中6
-			viewer.timeline.container.style.display = 'none'; //隐藏时间轴 图中7
-			viewer.fullscreenButton.container.style.display = 'none'; //隐藏全屏按钮 图中8
-			viewer._cesiumWidget._creditContainer.style.display = 'none'; //隐藏logo 图中9
+			// 隐藏 toolbar
+			viewer.animation._container.style.display = 'none'; //隐藏掉时钟 图中 6
+			viewer.timeline.container.style.display = 'none'; //隐藏时间轴 图中 7
+			viewer.fullscreenButton.container.style.display = 'none'; //隐藏全屏按钮 图中 8
+			viewer._cesiumWidget._creditContainer.style.display = 'none'; //隐藏 logo 图中 9
 			const toolbar: HTMLElement = document.querySelector(
 				'.cesium-viewer-toolbar'
 			)!;
@@ -52,7 +52,7 @@ export default function NightEarth({ className }: { className: String }) {
 			// const imageryLayer = viewer.imageryLayers.addImageryProvider(await Cesium.IonImageryProvider.fromAssetId(3812));
 			// await viewer.zoomTo(imageryLayer);
 
-			// 方法2
+			// 方法 2
 			// 获取新的图像层的覆盖范围
 			// const imageryLayerExtent = imageryLayer.imageryProvider.rectangle;
 
@@ -66,7 +66,7 @@ export default function NightEarth({ className }: { className: String }) {
 			//   ),
 			// });
 
-			// 方法3
+			// 方法 3
 			const imageryProvider = await Cesium.IonImageryProvider.fromAssetId(3812);
 			const imageryLayer =
 				viewer.imageryLayers.addImageryProvider(imageryProvider);
@@ -150,38 +150,42 @@ export default function NightEarth({ className }: { className: String }) {
 		viewer.clock.onTick.removeEventListener(applyGlobeSpin);
 	}
 
-	// 处理点击事件，飞行+跳转
+	// 处理点击事件，飞行 + 跳转
 	function handleClick() {
 		stopSpinGlobe();
-		var chinaPosition = Cesium.Cartesian3.fromDegrees(104.1954, 20.8617, 10000000); // 经度, 纬度, 高度
+		var chinaPosition = Cesium.Cartesian3.fromDegrees(
+			104.1954,
+			20.8617,
+			10000000
+		); // 经度，纬度，高度
 
 		viewer.camera.flyTo({
 			destination: chinaPosition,
 			orientation: {
-				heading: Cesium.Math.toRadians(0.0),  // 方位角
+				heading: Cesium.Math.toRadians(0.0), // 方位角
 				pitch: Cesium.Math.toRadians(-90.0), // 俯仰角
-				roll: 0.0                            // 滚转角
+				roll: 0.0 // 滚转角
 			},
-			complete:()=>{
+			complete: () => {
 				console.log('flyTo 结束');
 				setTimeout(() => {
 					router.push('/journey');
 				}, 3000);
 			},
 			duration: 3 // 飞行到目标点所需的时间（秒）
-		})
+		});
 	}
 
 	return (
 		<div className={cn('', className)}>
 			<div
-				id='cesiumContainer'
+				id="cesiumContainer"
 				ref={cesiumContainerRef}
 				style={{ width: '100%', height: '100vh' }}
 			/>
 			{/* <div id="cesiumContainer" ref={cesiumContainerRef} style={{ width: "50%", height: "50vh" }} /> */}
 			<button
-				className='rounded-lg bg-gradient-to-r from-blue-500 to-purple-600 px-1 py-1 text-xs font-bold text-white shadow-md transition duration-300 ease-in-out hover:from-purple-500 hover:to-blue-600 hover:shadow-lg'
+				className="rounded-lg bg-gradient-to-r from-blue-500 to-purple-600 px-1 py-1 text-xs font-bold text-white shadow-md transition duration-300 ease-in-out hover:from-purple-500 hover:to-blue-600 hover:shadow-lg"
 				style={{
 					position: 'absolute',
 					zIndex: 3,
@@ -191,9 +195,7 @@ export default function NightEarth({ className }: { className: String }) {
 					height: '50px',
 					padding: '0 20px'
 				}}
-				onClick={() => {
-					handleClick();
-				}}
+				onClick={handleClick}
 			>
 				Dive Into
 			</button>

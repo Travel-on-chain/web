@@ -15,7 +15,7 @@ import { Navbar } from '@/components/navbar';
 echarts.registerMap('china', china);
 
 export const metadata: Metadata = {
-	title: 'Palamedes',
+	title: 'Travel on Chain',
 	description: 'A composed NFT issued on Ethereum blockchain'
 };
 
